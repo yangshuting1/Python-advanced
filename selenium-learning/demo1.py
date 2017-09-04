@@ -21,8 +21,7 @@ class youhujiaOrSearch(unittest.TestCase):
         driver.set_page_load_timeout(40)
         driver.maximize_window()
         try:
-
-            driver.get("htt")
+            driver.get("loginUrl")
             # 隐形等待
             driver.implicitly_wait(30)
         except TimeoutException:
