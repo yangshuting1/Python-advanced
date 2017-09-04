@@ -7,6 +7,9 @@ import time
 import datetime
 import urllib2
 
+request_url = ""
+webhook = ""
+
 
 # 创建一个类
 class Port:
@@ -74,11 +77,11 @@ def get_projects():
     # 科普:1秒=1000毫秒=1000000微秒
     minDuration = 1000000
     limit = 100000
-    projectList = ['galaxy', 'evans', 'farmer', 'dna',  'careservice', 'civilization', 'cms',
-                   'curvaturedrive', 'shooter', 'difoil','hdfragments']
+    projectList = ['galaxy', 'evans', 'farmer', 'dna', 'careservice', 'civilization', 'cms',
+                   'curvaturedrive', 'shooter', 'difoil', 'hdfragments']
 
-                    #,'bye', 'dimension', 'era', 'singer','yolar', 'sophon','hibernation', 'huformation', 'kfb', 'mentalseal', 'midas', 'momentum', 'nsk', 'oldyolar',
-                   #'owl', 'painter', 'redcoast', 'gateway', 'soalr', 'sophon', 'scientificboundary', 'dagon', ]
+    # ,'bye', 'dimension', 'era', 'singer','yolar', 'sophon','hibernation', 'huformation', 'kfb', 'mentalseal', 'midas', 'momentum', 'nsk', 'oldyolar',
+    # 'owl', 'painter', 'redcoast', 'gateway', 'soalr', 'sophon', 'scientificboundary', 'dagon', ]
 
     startDate = date_to_str(before_days(7))
     buildStartTime = startDate + ' 00:00:00'
@@ -93,7 +96,7 @@ def get_projects():
                   minDuration: minDuration, 'limit': limit, 'lookback': lockBack, 'annotationQuery': '',
                   }
 
-        r = requests.get("url", params=values)
+        r = requests.get(request_url, params=values)
 
         if r.status_code == requests.codes.ok:
             text = r.content
@@ -130,10 +133,10 @@ def get_projects():
             list = sorted(portList, key=get_duration, reverse=True)
 
             projectDict[project] = list
+        else:
+            return 'error'
 
     return projectDict
-
-
 
 
 def display_duration(duration):
@@ -150,18 +153,33 @@ def project_owner():
     projectOwner = {}
 
     # key:project ,value:name
-    # 小明
+    # 袁鑫
     list1 = ['galaxy', 'farmer', 'dna', 'sophon', 'difoil']
-   
+    # 圣阳
+    list2 = ['evans', 'dagon', 'hdfragments']
+    # 卢江
+    list3 = ['curvaturedrive', 'civilization', 'shooter']
+    # 江明
+    list4 = ['solar', 'cms']
+    # 刘剑
+    list5 = ['careservice']
+
     for pro1 in list1:
-        projectOwner[pro1] = ['小明', '11111111111']
-    
+        projectOwner[pro1] = ['袁鑫', '17501004368']
+    for pro2 in list2:
+        projectOwner[pro2] = ['ListenYoung', '15214597203']
+    for pro3 in list3:
+        projectOwner[pro3] = ['卢江', '17610170591']
+    for pro4 in list4:
+        projectOwner[pro4] = ['李江明', '15210544796']
+    for pro5 in list5:
+        projectOwner[pro5] = ['刘剑', '13521177327']
 
     return projectOwner
 
 
-def dingding(content, mobiles):
-    url = "webhook"
+def dingding(content, mobiles, webhook):
+    url = webhook
     header = {
         "Content-Type": "application/json",
         "charset": "utf-8"
@@ -183,12 +201,37 @@ def dingding(content, mobiles):
     print urlopen.read()
 
 
+def dingding2(webhook):
+    url = webhook
+    header = {
+        "Content-Type": "application/json",
+        "charset": "utf-8"
+    }
+    data = {
+        "msgtype": "text",
+        "text": {
+            "content": "主人:\t Zipkin 挂掉了 /(ㄒoㄒ)/~~ "
+        },
+        "at": {
+            "isAtAll": False
+        }
+    }
+
+    sendData = json.dumps(data)
+    request = urllib2.Request(url, data=sendData, headers=header)
+    urlopen = urllib2.urlopen(request)
+    print urlopen.read()
+
+
 def main():
-    content =get_projects()
-    dingding(display_content(content), get_mobiles(content))
+    content = get_projects()
+    if content == 'error':
+        dingding2(webhook)
+    else:
+        dingding(display_content(content), get_mobiles(content),webhook)
 
 
-def display_content(content):
+def display_content(content,request_url):
     display = '\n'
     # 创建一个保存项目的list
     for key in content:
@@ -196,7 +239,7 @@ def display_content(content):
             continue
         display = display + str(key) + ': @' + str(project_owner().get(key)[0]) + '\n'
         for port in content[key]:
-            display = display + 'url' + str(
+            display = display + request_url + str(
                 port.traceId) + '\n' + 'duration:' + display_duration(
                 str(port.duration)).rjust(10) + '\n'
             display = '%+10s' % display
@@ -208,7 +251,7 @@ def display_content(content):
 
 def get_mobiles(content):
     # 组装电话号码
-    top_three_mobile=[]
+    top_three_mobile = []
     mobiles = []
     for key in content:
         if len(content[key]) != 0:
@@ -226,4 +269,3 @@ def get_mobiles(content):
 
 
 main()
-

@@ -9,6 +9,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 
+request_url=""
+
+user_name=""
+user_password=""
+
 
 class youhujiaOrSearch(unittest.TestCase):
     def setUp(self):
@@ -21,8 +26,7 @@ class youhujiaOrSearch(unittest.TestCase):
         driver.set_page_load_timeout(40)
         driver.maximize_window()
         try:
-
-            driver.get("loginUrl")
+            driver.get(request_url)
             # 隐形等待
             driver.implicitly_wait(30)
         except TimeoutException:
@@ -37,11 +41,11 @@ class youhujiaOrSearch(unittest.TestCase):
         login_phone.clear()
         login_password.clear()
 
-        login_phone.send_keys("17501004368")
+        login_phone.send_keys(user_name)
         time.sleep(1)
         login_phone.send_keys(Keys.RETURN)
 
-        login_password.send_keys("1")
+        login_password.send_keys(user_password)
         time.sleep(1)
         login_password.send_keys(Keys.RETURN)
 
