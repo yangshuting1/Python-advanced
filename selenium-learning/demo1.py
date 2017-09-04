@@ -22,7 +22,7 @@ class youhujiaOrSearch(unittest.TestCase):
         driver.maximize_window()
         try:
 
-            driver.get("http://admin.youhujia.com/nurse/login")
+            driver.get("htt")
             # 隐形等待
             driver.implicitly_wait(30)
         except TimeoutException:
