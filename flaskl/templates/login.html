@@ -1,0 +1,15 @@
+{% extends "show_main.html" %}
+{% block body %}
+  <h2>欢迎来到淘宝宝O(∩_∩)~</h2>
+  <a href="{{ url_for('register') }}">registered</a>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('login') }}" method="post">
+    <dl>
+      <dt>Username:
+      <dd><input type=text name=username>
+      <dt>Password:
+      <dd><input type=password name=userpass>
+      <dd><input type=submit value=Login>
+    </dl>
+  </form>
+{% endblock %}
